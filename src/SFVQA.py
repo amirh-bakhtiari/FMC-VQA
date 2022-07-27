@@ -20,7 +20,8 @@ def set_feats_extractor(device, model_name='efficientnet', frame_layers={'avgpoo
     
     if model_name == 'vgg19':
         model = models.vgg19(pretrained=True)
-       
+        model.avgpool = nn.AdaptiveAvgPool2d(output_size=1)
+
         if fine_tune:        
             # Replace the last dense layer of classifier portion with one node 
             # to use it as a neural network regressor
@@ -30,9 +31,9 @@ def set_feats_extractor(device, model_name='efficientnet', frame_layers={'avgpoo
         else:
             model.to(device)
 
-        model = model.features
-        # Rename the model to its original before truncating features portion
-        model.__class__.__name__ = 'VGG'
+        # model = model.features
+        # # Rename the model to its original before truncating features portion
+        # model.__class__.__name__ = 'VGG'
         
     elif model_name == 'inceptionv3':
         model = models.inception_v3(pretrained=True)

@@ -117,13 +117,14 @@ def init_vqa(model_name, vqa_dataset, cross_dataset=None):
         frame_size, center_crop = 255, 224
         # Specify the layers to get style features from vgg19
         layers = {
-                  # '0': 'conv1_1',
-                  '5': 'conv2_1', 
-                  # '10': 'conv3_1', 
-                  # '19': 'conv4_1',
+                  # 'features.10': 'conv3_1',
+                  'features.16': 'conv3_4',
+                  # 'features.19': 'conv4_1',
+                  # 'features.21': 'conv4_2',
+                  'avgpool': 'avgpool'
                   }
         # Layer for getting features from frame differences
-        diff_layer = {'20': 'conv4_2'}
+        diff_layer = {'features.20': 'conv4_2'}
         
     elif model_name == 'inceptionv3':
         frame_size, center_crop = 338, 299
@@ -140,23 +141,26 @@ def init_vqa(model_name, vqa_dataset, cross_dataset=None):
     
     # EfficientNet B4 layers
     elif model_name == 'efficientnet':
-        frame_size, center_crop = 384, 380
+        frame_size, center_crop = 423, 380
         # Specify the layers to get style features from EfficientNet B4
         layers = {
                   'features.3.3.add': 'features.3.3.add',
-                  'features.4.4.add': 'features.4.4.add',  
+                  'features.4.4.add': 'features.4.4.add',
                   'features.5.5.add': 'features.5.5.add',
                   'avgpool': 'avgpool',
                   }
         # Layer for getting features from frame differences
-        diff_layer = {'avgpool': 'avgpool'}        
+        diff_layer = {
+                      # 'features.5.5.add': 'features.5.5.add',
+                      'avgpool': 'avgpool',
+                     }        
     
     # Specify whether or not extract features from frame differences
     frame_diff = False
     
     # Check if there is a GPU
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    # Set the frame features extractor model (VGG19)
+    # Set the frame features extractor model
     ffeats_extractor, dfeats_extractor = sfv.set_feats_extractor(device, model_name, layers, diff_layer,
                                                                  fine_tune=False, frame_size=frame_size,
                                                                  center_crop=center_crop)
@@ -172,7 +176,7 @@ def main():
     '''
     # Initialize vqa
     ffeats_extractor, dfeats_extractor, device, vqa_dataset, cross_dataset, frame_size, center_crop,\
-                                                                   frame_diff = init_vqa('efficientnet', 
+                                                                   frame_diff = init_vqa('vgg19', 
                                                                                          'konvid1k')
     # Get video level features by pooling frame level features
     pooled_feats, scores = video_level_feats(ffeats_extractor, dfeats_extractor, device, vqa_dataset,
@@ -193,6 +197,10 @@ def main():
 # Run the main function if current file is the script, not a module
 if __name__ == "__main__":
     main()
+```
+
+```{python}
+
 ```
 
 ```{python}
