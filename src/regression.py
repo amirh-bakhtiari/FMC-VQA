@@ -67,7 +67,7 @@ def normalize_cross_scores(cross_dataset, yc):
     # Normalize the cross dataset scores
     if cross_dataset == 'live_vqc':
         ycn = yc / 100.0
-    elif cross_dataset == 'konvid1k':
+    elif cross_dataset == 'konvid1k' or cross_dataset == 'youtube_ugc':
         ycn = yc - 1
         ycn /= 4.0
     
@@ -89,7 +89,7 @@ def calc_correlation(y_gt, y_pred, sc, dataset=None, delimiter='-'):
     
     # If dataset name has been given, normalize the results to compare with the cross dataset scores
     # since the ground-truth (y_gt) of the cross dataset has already been normalized
-    if dataset == 'konvid1k':
+    if dataset == 'konvid1k' or dataset == 'youtube_ugc':
         y_pred -= 1
         y_pred /= 4.0
     elif dataset == 'live_vqc':
@@ -127,14 +127,14 @@ def plot_correlation(y_gt, y_pred, sc, num, srocc, dataset=None, cross_dataset=N
     if cross_dataset is not None:
         if dataset == 'live_vqc':
             y_pred /= 100.0
-        elif dataset == 'konvid1k':
+        elif dataset == 'konvid1k' or dataset == 'youtube_ugc':
             y_pred -= 1
             y_pred /= 4
             
         if cross_dataset == 'live_vqc':
             y_pred *= 100
             file_path = f'plots/{num}_{abs(srocc):.4f}_{cross_dataset}.png'
-        elif cross_dataset == 'konvid1k':
+        elif cross_dataset == 'konvid1k' or cross_dataset == 'youtube_ugc':
             y_pred *= 4
             y_pred += 1
             file_path = f'plots/{num}_{abs(srocc):.4f}_{cross_dataset}.png'

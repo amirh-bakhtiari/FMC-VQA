@@ -81,6 +81,25 @@ def get_live_vqc_info(file_path):
     
     return videos, mos
 
+def get_youtube_ugc_info(file_path):
+    '''Get YouTube UGC dataset annotation file and extract video file names and their
+       corresponding MOS
+       
+    :param file_path: the path to dataset info file
+    :return: video sequence names and their MOS
+    '''
+    
+    # Read the excel file which includes the video names and their MOS
+    df = pd.read_excel(file_path, sheet_name='MOS')
+    
+    mos = df['MOS full'].values
+    videos = df['vid'].values
+    
+    # Convert the videos array of arrays to a list of strings
+    videos = [str(video) + '.mp4' for video in videos]
+    
+    return videos, mos
+
 
 def get_videoset_info(dataset='LIVE', frame_size: int = 224, center_crop: int = 224, framework='pytorch'):
     '''Given the name of the video dataset, get the list of respective video names and their scores,
@@ -109,6 +128,8 @@ def get_videoset_info(dataset='LIVE', frame_size: int = 224, center_crop: int = 
         videos, scores = get_konvid1k_info(annotations_file_1)
     elif dataset == 'live_vqc':
         videos, scores = get_live_vqc_info(annotations_file_1)
+    elif dataset == 'youtube_ugc':
+        videos, scores = get_youtube_ugc_info(annotations_file_1)
         
     if framework == 'pytorch':
         # pytorch specific preprocessing

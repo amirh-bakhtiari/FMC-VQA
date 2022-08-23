@@ -14,4 +14,8 @@ live_vqc:
   annotations_file_1: /media/amirh/Programs/Projects/VQA_Datasets/LIVE_VQC/data.mat
   annotations_file_2: null
   video_dir: /media/amirh/Programs/Projects/VQA_Datasets/LIVE_VQC/video
-    
+# Youtube-UGC VQA Dataset
+youtube_ugc:
+  annotations_file_1: /media/amirh/Multimedia/Video/VQA_dataset/YouTube_UGC/original_videos_MOS_for_YouTube_UGC_dataset.xlsx
+  annotations_file_2: null
+  video_dir: /media/amirh/Multimedia/Video/VQA_dataset/YouTube_UGC/videos
