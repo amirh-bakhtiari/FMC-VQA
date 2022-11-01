@@ -173,6 +173,7 @@ cython_debug/
 
 # Office Files
 *.docx
+*.docx#
 
 # Numpy saved file
 *.npy

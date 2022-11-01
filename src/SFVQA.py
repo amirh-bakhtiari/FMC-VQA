@@ -63,7 +63,8 @@ def set_feats_extractor(device, model_name='efficientnet', frame_layers={'avgpoo
             model.to(device)
     
     elif model_name == 'efficientnet':
-        model = models.efficientnet_b4(pretrained=True)
+        # model = models.efficientnet_b4(pretrained=True) # Torchvision 0.12
+        model = models.efficientnet_b4(weights='IMAGENET1K_V1') # Torchvision 0.13
 
         # Put the model in inference mode
         model.eval()
@@ -98,7 +99,11 @@ def gram_matrix(tensor, flat=True):
     gram = torch.mm(tensor, tensor.t())
 
     if flat == True:
-        return torch.flatten(gram)
+        # return torch.flatten(gram)
+        gram = gram.cpu().numpy()
+        # Get the upper-triangle of the gram matrix due to its symmetry
+        indices = np.triu_indices(gram.shape[0])
+        return gram[indices]
     else:
         return gram
 
@@ -117,12 +122,13 @@ def get_video_style_features(video, model, device, transform, hist_feat=False, b
     :param bins: number of bins for histogram
     :return: an array of concatenated gram matrices for each frame in video
     '''
-        
+    
     video_features = []
     for frame in video:
         
         # Convert the array image to PIL image
         frame = Image.fromarray(frame)
+        
         # Convert the image array to a tensor, and go through the defined preprocessing
         # then add the batch dimension and transfer the tensor to the GPU (if available)
         frame = transform(frame).unsqueeze(0).to(device)
@@ -135,7 +141,7 @@ def get_video_style_features(video, model, device, transform, hist_feat=False, b
         for layer, feature_maps in features.items():
             # If the layer is used for getting style features
             if layer != 'avgpool':
-                frame_gram_matrices.extend(gram_matrix(feature_maps).cpu().numpy())
+                frame_gram_matrices.extend(gram_matrix(feature_maps))
             else: # If the layer is used for getting content (CNN) features 
                 frame_gram_matrices.extend(feature_maps.flatten().cpu().numpy())
        
