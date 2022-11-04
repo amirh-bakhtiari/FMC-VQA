@@ -1,18 +1,19 @@
----
-jupyter:
-  jupytext:
-    text_representation:
-      extension: .Rmd
-      format_name: rmarkdown
-      format_version: '1.2'
-      jupytext_version: 1.14.0
-  kernelspec:
-    display_name: Python 3 (ipykernel)
-    language: python
-    name: python3
----
+# ---
+# jupyter:
+#   jupytext:
+#     formats: ipynb,py
+#     text_representation:
+#       extension: .py
+#       format_name: light
+#       format_version: '1.5'
+#       jupytext_version: 1.14.0
+#   kernelspec:
+#     display_name: Python 3 (ipykernel)
+#     language: python
+#     name: python3
+# ---
 
-```{python tags=c()}
+# + tags=[]
 import numpy as np
 import torch
 from torchvision import models
@@ -26,9 +27,9 @@ import pooling
 import regression as reg
 import SFVQA as sfv
 import VideoUtility as vu
-```
 
-```{python tags=c()}
+
+# + tags=[]
 def videoset_frame_feats(model, device, video_list: str, video_path: str, transform, 
                          dataset: str = 'LIVE', *, frame_diff=False) -> list:
     '''Get the VQA dataset video names and scores, set a feature extractor model,
@@ -62,9 +63,10 @@ def videoset_frame_feats(model, device, video_list: str, video_path: str, transf
         yield frames_features
     
     # return videos_frame_features, scores
-```
 
-```{python}
+
+# -
+
 def video_level_feats(ffeats_extractor, dfeats_extractor, device, dataset, frame_size, center_crop,
                       frame_diff: bool = False, pool_type='max'):
     '''Get frame level features and pool them to have video level features (representation)
@@ -102,9 +104,9 @@ def video_level_feats(ffeats_extractor, dfeats_extractor, device, dataset, frame
         pooled_features = np.concatenate((pooled_features, pooled_diff), axis=1)
     
     return pooled_features, scores
-```
 
-```{python tags=c()}
+
+# + tags=[]
 def init_vqa(model_name, vqa_dataset, cross_dataset=None, frame_diff=False):
     ''' Set the frame feature extractor model, VQA dataset and frame size
     
@@ -165,9 +167,10 @@ def init_vqa(model_name, vqa_dataset, cross_dataset=None, frame_diff=False):
                 
     return ffeats_extractor, dfeats_extractor, device, vqa_dataset, cross_dataset, frame_size,\
                                                                         center_crop, frame_diff    
-```
 
-```{python}
+
+# -
+
 # Entry point of the program
 def main():
     '''Run the whole process of VQA
@@ -189,34 +192,22 @@ def main():
         
     # Train a regressor using video level features and indicate how well it predicts the scores
     reg.regression(pooled_feats, scores, c_pooled_feats, c_scores, 'svr', vqa_dataset, cross_dataset)               
-```
 
-```{python tags=c()}
+
+# + tags=[]
 # Run the main function if current file is the script, not a module
 if __name__ == "__main__":
     main()
-```
+# -
 
-```{python}
 
-```
 
-```{python}
 
-```
 
-```{python}
 
-```
 
-```{python}
 
-```
 
-```{python}
 
-```
 
-```{python}
 
-```
